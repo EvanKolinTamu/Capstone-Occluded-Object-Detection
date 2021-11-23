@@ -20,6 +20,13 @@ from utils.general import check_img_size, check_requirements, check_imshow, colo
 from utils.plots import Annotator, colors
 from utils.torch_utils import load_classifier, select_device, time_sync
 
+count_I = int(input("how many 'I' shapes do you want? "))
+count_I2 = count_I
+count_L = int(input("how many 'L' shapes do you want? "))
+count_L2 = count_L
+count_T = int(input("how many 'T' shapes do you want? "))
+count_T2 = count_T
+
 @torch.no_grad()
 def run():
 
@@ -27,7 +34,7 @@ def run():
     imgsz=640  # inference size (pixels)
     conf_thres=0.25  # confidence threshold
     iou_thres=0.45  # NMS IOU threshold
-    max_det=10  # maximum detections per image
+    max_det=20  # maximum detections per image
     classes=None  # filter by class: --class 0, or --class 0 2 3
     agnostic_nms=False  # class-agnostic NMS
     augment=False  # augmented inference
@@ -43,6 +50,8 @@ def run():
     nosave=False  # do not save images/videos
     update=False  # update all models
     name='exp'  # save results to project/name
+
+
 
     # Initialize
     set_logging()
@@ -82,6 +91,12 @@ def run():
     align = rs.align(align_to)
     
     while(True):
+
+        count_I2 = count_I
+        count_L2 = count_L
+        count_T2 = count_T
+
+
         t0 = time.time()
 
         frames = pipeline.wait_for_frames()
@@ -136,6 +151,7 @@ def run():
             s = f'{i}: '
             s += '%gx%g ' % img.shape[2:]  # print string
             annotator = Annotator(img0, line_width=line_thickness, example=str(names))
+            #print(Annotator(img0, line_width=line_thickness, example=str(names)))
             if len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
@@ -143,12 +159,34 @@ def run():
                 # Print results
                 for c in det[:, -1].unique():
                     n = (det[:, -1] == c).sum()  # detections per class
+                    if not(count_I2 == 0 and count_L2==0 and count_T2==0): 
+                        
+                        boundingbox_color = (0, 255, 0)
+                        
+
+                        if names[int(c)] == 'I':
+                            count_I2-= 1 
+                        elif names[int(c)] == 'L':
+                            count_L2-= 1
+                        elif names[int(c)] == 'T':
+                            count_T2-= 1
+
+                    else:
+                        boundingbox_color = (255, 0, 0)
+
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
+                    print("this is count_I2 ",count_I2)
+                    print("this is count_L2 ",count_L2)
+                    print("this is count_T2 ",count_T2)
+                    print("this is  names[int(c)]", names[int(c)])
+
+                    
                 
+
                 for *xyxy, conf, cls in reversed(det):
                     c = int(cls)  # integer class
                     label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
-                    annotator.box_label(xyxy, label, color=colors(c, True))
+                    annotator.box_label(xyxy, label, color=boundingbox_color)
 
         cv2.imshow("IMAGE", img0)
         depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.08), cv2.COLORMAP_JET)
