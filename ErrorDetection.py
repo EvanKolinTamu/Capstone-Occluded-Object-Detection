@@ -10,11 +10,11 @@ from detect import run
 
 def error_detection(image_path, true_count, dataf, a):
 
-    thresh = 0.20
+    thresh = 0.50
 
     # run model detection
     count = run(weights="best.pt", 
-                imgsz=[416, 416], 
+                imgsz=[640, 640], 
                 source=image_path, 
                 return_result=True, 
                 conf_thres=thresh,
