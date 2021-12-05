@@ -16,11 +16,17 @@ The 2D camera subsystem also classifies and localizes it's contents so that erro
 
 NOTABLE FILES:
 Copy_of_YOLOv5_Custom_Training.ipynb: Training code for YOLOv5
+
 Final_Model.ipynb: Final Tensorflow Model
+
 Final_Version_3D.py: Final code for 3D subsystem
+
 best.pt: Final YOLO Model (whats used in systems)
+
 final_code_2D.py: Final code for 2D subsystem
+
 plots_3d.py: modified YOLO plots file for use in 3D subsystem
+
 
 DATASET:
 GitHub would not allow us to upload our dataset due to size contraints. 
